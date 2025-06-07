@@ -1,0 +1,25 @@
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        result = []
+        chessboard = ['.' * n for _ in range(n)]
+        self.backtracking(0,set(),set(),set(),n,chessboard,result)
+        return [[''.join(row) for row in solution] for solution in result]
+
+    def backtracking(self,r,diagonals_set,anti_diagonals_set,cols_set,n,chessboard,result):
+        if r == n:
+            result.append(chessboard[:])
+            return 
+        for c in range(n):
+            curr_diagonal = r - c 
+            curr_anti_diagonal = r + c
+            if c in cols_set or curr_diagonal in diagonals_set or curr_anti_diagonal in anti_diagonals_set: continue 
+            cols_set.add(c)
+            diagonals_set.add(curr_diagonal)
+            anti_diagonals_set.add(curr_anti_diagonal)
+            chessboard[r] = chessboard[r][:c] + 'Q' + chessboard[r][c+1:]
+            self.backtracking(r+1,diagonals_set,anti_diagonals_set,cols_set,n,chessboard,result)
+            chessboard[r] = chessboard[r][:c] + '.' + chessboard[r][c+1:]
+            cols_set.remove(c)
+            diagonals_set.remove(curr_diagonal)
+            anti_diagonals_set.remove(curr_anti_diagonal)
+        
